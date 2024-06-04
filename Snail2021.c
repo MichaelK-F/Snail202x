@@ -20,7 +20,7 @@ int main(){
 
   int theMagicByte = 0;
 
-  int resin86 = 0; // If resourceHacker is in x86 folder
+  int reslocation = 0; //storing the location of resource hacker
 
   #define VERLEN 10
   char mod_ver[VERLEN+1] ; //The version written in mod.txt (10 characters )
@@ -94,18 +94,24 @@ Do you have done everything mentioned above? Let's go.\n\
   fgets(str, 3,stdin);
   if (str[0]=='q') return 0;
 
-  printf("Checking if Resource Hacker is installed...\n");
+  printf("Checking if Resource Hacker is installed, or the portable version is present...\n");
   if( access( "\\Program Files\\Resource Hacker\\ResourceHacker.exe", R_OK) != -1 ) { 
-    printf("  OK\n"); 
+    printf("  OK (x64)\n"); 
+    reslocation = 1;
   } else
   if( access( "\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe", R_OK) != -1 ) { 
     printf("  OK (x86)\n"); 
-    resin86 = 1;
+    reslocation = 2;
+  } else
+  if( access( "ResourceHacker.exe", R_OK) != -1 ) {
+    printf("  OK (portable)\n"); 
+    reslocation = 3;
   } else {
     printf("\n  ERROR! Resource Hacker cannot be found at:\n\
   C:\\Program Files\\Resource Hacker\\ResourceHacker.exe  or\n\
-  C:\\Program Files\\Resource Hacker (x86)\\ResourceHacker.exe\n\
-  Pleas install this first. It must be in this path, because I'm lazy.\n\n");
+  C:\\Program Files\\Resource Hacker (x86)\\ResourceHacker.exe  or\n\
+  ResourceHacker.exe\n\
+  Pleas install this first. It must be in this path, because I'm lazy. (unless you use the portable version)\n\n");
     fgets(str, 3,stdin); return -1;
   }
 
@@ -139,14 +145,20 @@ If you have a question, ask on Discord: https://discord.com/invite/fWxZXvy !\n")
   //Now everything is there.
 
   printf("Let's begin. First I'm extracting 3070 and unzipping it to 3070_orig.bin.\n");
-  if(access("3070_orig.bin", R_OK) != -1 ){
+  if(access("temp/3070_orig.bin", R_OK) != -1 ){
     printf("3070_orig.bin already there, skipping this step.\n");
-  }else{
-    if (resin86) { // If resourceHacker is in x86 folder
-      system("\"\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe\" -open OSupdateDLL_orig.dll -save 3070extract.bin -action extract -mask RCData,3070,");
-    }else {
+  } else {
+    if (reslocation == 1) {
       system("\"\\Program Files\\Resource Hacker\\ResourceHacker.exe\" -open OSupdateDLL_orig.dll -save 3070extract.bin -action extract -mask RCData,3070,");
-    }
+    } else {
+      if (reslocation == 2) {
+        system("\"\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe\" -open OSupdateDLL_orig.dll -save 3070extract.bin -action extract -mask RCData,3070,");
+      } else {
+        if (reslocation == 3) {
+          system("\"ResourceHacker.exe -open temp/OSupdateDLL_orig.dll\" -save 3070extract.bin -action extract -mask RCData,3070,");
+        }
+      } 
+    } 
 
     //Now deflate that stuff.
 
@@ -616,11 +628,19 @@ Now compressing...\n");// ( . input  | output)\n");
   (void)fclose(Fout);
   printf("Successfully packed the firmware into the archive.\n\
 Now modify the dll file and save as \"OSupdate_mod.dll\".\n");      
-  if (resin86) { // If resourceHacker is in x86 folder
-    system("\"\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe\" -open OSupdateDLL_orig.dll -save OSupdateDLL_mod.dll -res 3070new.bin -action addoverwrite -mask RCData,3070,");
-  } else {
+
+  if (reslocation == 1) {
     system("\"\\Program Files\\Resource Hacker\\ResourceHacker.exe\" -open OSupdateDLL_orig.dll -save OSupdateDLL_mod.dll -res 3070new.bin -action addoverwrite -mask RCData,3070,");
-  }
+  } else {
+    if (reslocation == 2) {
+      system("\"\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe\" -open OSupdateDLL_orig.dll -save OSupdateDLL_mod.dll -res 3070new.bin -action addoverwrite -mask RCData,3070,");
+    } else {
+      if (reslocation == 3) {
+        system("\"ResourceHacker.exe\" -open OSupdateDLL_orig.dll -save OSupdateDLL_mod.dll -res 3070new.bin -action addoverwrite -mask RCData,3070,");
+      }
+    } 
+  } 
+
   printf("Look at the last message, if everything was successful.\n\n\
 In the last step we will modify the binary value in the dll (from 0x3000)\n");
 

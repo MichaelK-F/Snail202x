@@ -674,11 +674,13 @@ In the last step we will modify the binary value in the dll (from 0x3000)\n");
 echo off\r\n\
 color f0\r\n\
 cls\r\n\
-echo ########################################\r\n\
-echo #                                      #\r\n\
-echo #  Press [EXP] [/\\] [Clear] and Reset  #\r\n\
-echo #                                      #\r\n\
-echo ########################################\r\n\
+echo ########################################################\r\n\
+echo #                                                      #\r\n\
+echo #  Connect your calculator to the USB port.            #\r\n\
+echo #  Hold [EXP] + [^] + [Clear] on the calculator while  #\r\n\
+echo #  pressing [reset] on the back to enter update mode.  #\r\n\
+echo #                                                      #\r\n\
+echo ########################################################\r\n\
 rundll32 OSupdateDLL_mod.dll,OSUpdate\r\n",Fout);
     fclose(Fout);
   }
@@ -691,11 +693,13 @@ rundll32 OSupdateDLL_mod.dll,OSUpdate\r\n",Fout);
 echo off\r\n\
 color f0\r\n\
 cls\r\n\
-echo ########################################\r\n\
-echo #                                      #\r\n\
-echo #  Press [EXP] [/\\] [Clear] and Reset  #\r\n\
-echo #                                      #\r\n\
-echo ########################################\r\n\
+echo ########################################################\r\n\
+echo #                                                      #\r\n\
+echo #  Connect your calculator to the USB port.            #\r\n\
+echo #  Hold [EXP] + [^] + [Clear] on the calculator while  #\r\n\
+echo #  pressing [reset] on the back to enter update mode.  #\r\n\
+echo #                                                      #\r\n\
+echo ########################################################\r\n\
 rundll32 OSupdateDLL_orig.dll,OSUpdate\r\n",Fout);
     fclose(Fout);
   }
